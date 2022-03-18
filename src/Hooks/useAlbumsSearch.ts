@@ -24,6 +24,7 @@ export function useAlbumsSearch(searchTerm: string, limit: number) {
 
     fetchData();
     setAbortController(newAbortController);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
   return albums;

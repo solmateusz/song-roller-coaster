@@ -40,6 +40,7 @@ function useKeypressDelay(value: string, setFn: (s: string) => void, delayMs: nu
     }, delayMs);
 
     setCancellationToken(newCancellationToken);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 }
 
