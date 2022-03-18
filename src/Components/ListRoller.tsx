@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 
 interface IListRollerProps {
   items: string[];
@@ -9,35 +9,32 @@ interface IListRollerState {
   exchangeItems: string[];
 }
 
-export const ListRoller = (props: IListRollerProps) => {
-  const [classList, setClassList] = useState<string[]>(["item1", "item2", "item3","item4","item5",]);
+export const ListRoller = memo((props: IListRollerProps) => {
   const [state, setState] = useState<IListRollerState>();
-  const [cancellationToken, setCancellationToken] = useState<NodeJS.Timeout>();
+  const [classList, setClassList] = useState<string[]>(["item1", "item2", "item3", "item4", "item5"]);
 
-  useStateUpdateOnPropsChange(props.items, setState, cancellationToken);
+  useStateUpdateOnPropsChange(props.items, setState);
 
-  useShiftItemsOnInterval(
-    setState,
-    setClassList
-  );
+  useShiftItemsOnInterval(setState, setClassList, 1000);
 
   return (
     <ul>
       {state?.visibleItems.map((item, index) => (
-        <li key={index} className={classList[index]}>{item}</li>
+        <li key={index} className={classList[index]}>
+          {item}
+        </li>
       ))}
     </ul>
   );
-};
+});
+
+ListRoller.displayName = "ListRoller";
 
 function useStateUpdateOnPropsChange(
   items: IListRollerProps["items"],
-  setState: React.Dispatch<React.SetStateAction<IListRollerState | undefined>>,
-  cancellationToken: NodeJS.Timeout | undefined
+  setState: React.Dispatch<React.SetStateAction<IListRollerState | undefined>>
 ) {
   useEffect(() => {
-    if (cancellationToken !== undefined) clearTimeout(cancellationToken);
-
     setState((prevState) => {
       if (prevState === undefined)
         return {
@@ -56,7 +53,8 @@ function useStateUpdateOnPropsChange(
 
 function useShiftItemsOnInterval(
   setState: React.Dispatch<React.SetStateAction<IListRollerState | undefined>>,
-  setClassList: React.Dispatch<React.SetStateAction<string[]>>
+  setClassList: React.Dispatch<React.SetStateAction<string[]>>,
+  timeout: number
 ) {
   useEffect(() => {
     const cancellationToken = setInterval(() => {
@@ -82,9 +80,9 @@ function useShiftItemsOnInterval(
       setClassList((prevClassList) => {
         const tempClassList = [...prevClassList];
         let swapItem = tempClassList.shift() as string;
-        return [...tempClassList, swapItem]
+        return [...tempClassList, swapItem];
       });
-    }, 1000);
+    }, timeout);
 
     return () => clearInterval(cancellationToken);
 
