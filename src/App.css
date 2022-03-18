@@ -87,3 +87,23 @@ img {
   margin-bottom: 30px;
   border-radius: 5px;
 }
+
+
+@media only screen and (max-width: 600px) {
+  img {
+    max-height: 45vw;
+  }
+
+  li {
+    min-width: 75vw;
+    max-width: 75vw;
+  }
+
+  input {
+    width: 80vw;
+  }
+
+  div.title {
+    top:20px
+  }
+}
